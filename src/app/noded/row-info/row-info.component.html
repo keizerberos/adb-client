@@ -1,0 +1,27 @@
+<div class="input-group input-group-sm mb-1" *ngIf="row">
+	<span class="input-group-text">
+		<select [disabled]="row.locked" class="form-select form-select-sm " [value]="row.type"  (input)="updateValues(row,$event)" aria-label=".form-select-sm example">
+			<option value="string">Text</option>
+			<option value="number" selected>Number</option>
+			<option value="json">JSON</option>
+			<option value="string[]">Text []</option>
+			<option value="number[]" selected>Number []</option>
+			<option value="json[]">JSON []</option>
+			<option value="in">In</option>
+			<option value="out">Out</option>
+		</select>
+	</span>
+	<!-- <span class="input-group-text" id="basic-addon3">{{row.name}}</span> -->
+	<input type="text" placeholder="Name" class="input-group-text form-control" id="basic-url" [readOnly]="row.locked" [value]="row.getName()" (input)="row.setName(val($event))">
+	<ng-content>
+		<ng-content *ngIf="row.type=='string'"><input placeholder="Value" type="text" class=" form-control" id="basic-url" [value]="row.getValue()" (input)="row.setValue(val($event))"></ng-content>
+		<ng-content *ngIf="row.type=='number'"><input placeholder="0" type="number" class=" form-control" id="basic-url" [value]="row.getValue()" (input)="row.setValue(val($event))"></ng-content>
+
+		
+		<ng-content *ngIf="row.type=='json'"><span (click)="onEdit.emit(row)" class="btn btn-sm btn-outline-secondary" [title]="textAbstractP(row.value)">{{textAbstract(row.value,15)}}</span></ng-content>
+		<ng-content *ngIf="row.type=='json[]'"><span (click)="onEdit.emit(row)" class="btn btn-sm btn-outline-secondary" [title]="textAbstractP(row.value)">{{textAbstract(row.value,15)}}</span></ng-content>
+		<ng-content *ngIf="row.type=='string[]'"><span (click)="onEdit.emit(row)" class="btn btn-sm btn-outline-secondary" [title]="textAbstractP(row.value)">{{textAbstract(row.value,15)}}</span></ng-content>
+		<ng-content *ngIf="row.type=='number[]'"><span (click)="onEdit.emit(row)" class="btn btn-sm btn-outline-secondary" [title]="textAbstractP(row.value)">{{textAbstract(row.value,15)}}</span></ng-content>
+	</ng-content>
+	<span *ngIf="!row.locked" class="btn  btn-sm btn-outline-danger" (click)="row.remove()">-</span>
+</div>

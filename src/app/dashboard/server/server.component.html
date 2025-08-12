@@ -1,0 +1,32 @@
+<div class="card server-block" >
+    <div class="block-header">
+        <table class="block-table">
+            <tr>
+                <td>id:{{server.id}}</td>
+                <td>Server:{{server.app_id}}</td>
+                <td>CPU:{{server.states.cpu_usage}}%</td>
+                <td>MEM:{{server.states.mem_usage}}%</td>
+            </tr>
+            <tr>
+                <td colspan="4">Name:{{server.config.name}}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="block-measure">        
+        <div class="block-bar">
+            <ng-content *ngFor="let c of num2ar((server.states.cpu_usage)*(43/100))"> 
+                <div class="block-line"></div>
+            </ng-content>            
+        </div>
+        <div class="block-bar">
+            <ng-content *ngFor="let c of num2ar((server.states.mem_usage)*(43/100))"> 
+                <div class="block-line"></div>
+            </ng-content>  
+        </div>
+        <div class="block-bar">
+            <ng-content *ngFor="let latency of last10(server.latency)"> 
+                <div class="block-line" [ngClass]="{'block-line-yellow':(latency.elapsed>=3 && latency.elapsed<20),'block-line-red':(latency.elapsed>=20)}"></div>
+            </ng-content>              
+        </div>
+    </div>
+</div>

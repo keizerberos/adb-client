@@ -1,0 +1,38 @@
+.div-central {
+  width: 100%;
+  height: 100%;
+}
+
+#mainCanvas {
+  background-color: #555;
+  width: 100%;
+  height: 100%;
+}
+.menuFlotante {
+  position: absolute;
+  top: 0;
+  background-color: #00000066;
+}
+.menuFlotanteLevel2 {
+  position: absolute;
+  top: 30px;
+  background-color: #00000066;
+}
+
+
+.div-back{
+	position: absolute;
+	top:0;
+	left:0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.1);
+  	box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0);
+}
+.div-back-item{	
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

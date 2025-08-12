@@ -1,0 +1,87 @@
+<!-- <div class="input-group input-group-sm mb-1" *ngIf="array">
+	 <span class="input-group-text">
+		<select [disabled]="array.locked" class="form-select form-select-sm " [value]="array.type"  (input)="array.type = val($event); array.setType(val($event))" aria-label=".form-select-sm example">
+			<option value="string">Text</option>
+			<option value="number" selected>Number</option>
+			<option value="json">JSON</option>
+			<option value="string[]">Text []</option>
+			<option value="number[]" selected>Number []</option>
+			<option value="json[]">JSON []</option>
+			<option value="in">In</option>
+			<option value="out">Out</option>
+		</select>
+	</span> -->
+	<!-- <span class="input-group-text" id="basic-addon3">{{array.name}}</span> -->
+	<!--<input type="text" placeholder="Name" class="input-group-text form-control" id="basic-url" [readOnly]="array.locked" [value]="array.getName()" (input)="array.setName(val($event))">
+	<ng-content>
+		<ng-content *ngIf="array.type=='string'"><input placeholder="Value" type="text" class=" form-control" id="basic-url" [value]="array.getValue()" (input)="array.setValue(val($event))"></ng-content>
+		<ng-content *ngIf="array.type=='number'"><input placeholder="0" type="number" class=" form-control" id="basic-url" [value]="array.getValue()" (input)="array.setValue(val($event))"></ng-content>
+		<ng-content *ngIf="array.type=='json'"><span class="btn btn-sm btn-outline-secondary">...</span></ng-content>
+		<ng-content *ngIf="array.type=='json[]'"><span (click)="onEdit.emit(array)" class="btn btn-sm btn-outline-secondary">...</span></ng-content>
+		<ng-content *ngIf="array.type=='string[]'"><span (click)="onEdit.emit(array)" class="btn btn-sm btn-outline-secondary">...</span></ng-content>
+		<ng-content *ngIf="array.type=='number[]'"><span (click)="onEdit.emit(array)" class="btn btn-sm btn-outline-secondary">...</span></ng-content>
+	</ng-content> 
+	<span *ngIf="!array.locked" class="btn  btn-sm btn-outline-danger" (click)="array.remove()">-</span>
+</div>-->
+
+<span class="btn btn-sm btn-outline-secondary" (click)="onClose.emit()">cerrar</span>
+<span class="btn btn-sm btn-outline-success" (click)="save()">guardar</span>
+
+<span class="label ms-4" > [json] {{name}}</span>
+
+	<div class="input-group input-group-sm mb-1 json-table"  >
+		<table>
+			<thead>
+				<tr>
+					<th>
+						<span class="btn small-font btn-sm btn-outline-success" (click)="addField()">+</span>
+					</th>
+				</tr>
+			</thead>
+			<tbody *ngIf="format && values">
+				<tr *ngFor="let f of format,let i = index">
+					<ng-content *ngIf="!f.delete">
+						<td><input placeholder="Value" type="text" class="small-font-header  form-control" id="basic-url" [(ngModel)]="f.name" (input)="updateFields();"></td>
+						
+						<td>							
+							<table >
+								<td>
+								<select class="small-font-select form-select form-select-sm" [(ngModel)]="f.type" (input)="updateFields()" >
+									<option value="string">Text</option>
+									<option value="number" selected>Number</option>
+									<option value="json">JSON</option>
+									<option value="string[]">Text []</option>
+									<option value="number[]" selected>Number []</option>
+									<option value="json[]">JSON []</option>							
+								</select>
+								</td>
+							<th>
+								<span class="btn btn-sm btn-outline-danger small-btn" (click)="f.delete = true;f.name='000000001'">x</span>
+							</th>							
+							</table >
+						</td>
+						<td *ngFor="let v of values">										
+							<ng-content *ngIf="f.type=='string'"><input placeholder="Value" type="text" class="small-font  form-control" [value]="v[i].value" (input)="v[i].value=val($event);updateValue()"></ng-content>
+							<ng-content *ngIf="f.type=='number'"><input placeholder="0" type="number" class="small-font form-control"  [value]="v[i].value" (input)="v[i].value=val($event);updateValue()"></ng-content>
+							<ng-content *ngIf="f.type=='json'"><span (click)="updateFields();onEditJson.emit(v[i])" class="btn w-100 small-font  btn-sm btn-outline-secondary" [title]="textAbstractP(v[i].value)">{{textAbstract(v[i].value,30)}}</span></ng-content>
+							<ng-content *ngIf="f.type=='json[]'"><span (click)="updateFields();onEditJson.emit(v[i])" class="btn w-100 small-font  btn-sm btn-outline-secondary" [title]="textAbstractP(v[i].value)">{{textAbstract(v[i].value,30)}}</span></ng-content>
+							<ng-content *ngIf="f.type=='string[]'"><span (click)="updateFields();onEditArray.emit(v[i])" class="btn w-100 small-font  btn-sm btn-outline-secondary" [title]="textAbstractP(v[i].value)">{{textAbstract(v[i].value,30)}}</span></ng-content>
+							<ng-content *ngIf="f.type=='number[]'"><span (click)="updateFields();onEditArray.emit(v[i])" class="btn w-100  small-font  btn-sm btn-outline-secondary" [title]="textAbstractP(v[i].value)">{{textAbstract(v[i].value,30)}}</span></ng-content>
+						</td>
+					</ng-content>
+				</tr>
+			</tbody>
+		</table>
+		<!-- <span *ngIf="!json.locked" class="btn  btn-sm btn-outline-danger" (click)="remoteItem(value)">-</span>	 -->
+	</div>
+<!--
+	<div class="input-group input-group-sm mb-1" *ngIf="array">
+		<input class="input-group-text input-group-text-sm form-control" type="text" value="ds"/>
+		<span *ngIf="!array.locked" class="btn  btn-sm btn-outline-danger" (click)="array.remove()">-</span>	
+	</div>
+
+	<div class="input-group input-group-sm mb-1" *ngIf="array">
+		<input class="input-group-text input-group-text-sm form-control" type="text" value="ds"/>
+		<span *ngIf="!array.locked" class="btn  btn-sm btn-outline-danger" (click)="array.remove()">-</span>	
+	</div>
+-->

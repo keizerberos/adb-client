@@ -1,0 +1,51 @@
+<div class="fixed-div-all ">
+	<div class="fixed-div container">
+		<div class="card">
+			<div class="card-body">
+				<h5 class="card-title"><input type="text" class="form-control " id="basic-url" aria-describedby="basic-addon3" [value]="table.getTitle()" (input)="table.setTitle(val($event))"></h5>
+				<span class="card-text">
+					<ng-content *ngFor="let row of rows">
+						<ng-content>
+							<noded-row-info (onEdit)="editRow($event)" [row]="row"></noded-row-info>
+						</ng-content>
+					</ng-content>
+					<span class="btn btn-sm btn-outline-success" (click)="addField()">agregar</span>
+				</span>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- <div class="div-back fixed-div-bottom container-fluid bg-none" *ngIf="selectedArray"> -->
+<div class="div-x div-back " *ngFor="let selected of selectedArray">
+	<div class="card div-back-item shadow" *ngIf="selected">
+		<div class="card-body">
+			<ng-content *ngIf="selected.type=='json'">
+				<noded-json-info-one (onEdit)="editRow($event)" (onEditJson)="addEditJson($event)" (onEditArray)="editRow($event)" (onClose)="removeArray(selected)" [json]="selected"></noded-json-info-one>
+			</ng-content>			
+			<ng-content *ngIf="selected.type == 'json[]'">
+				<noded-json-info (onEdit)="editRow($event)" (onEditJson)="addEditJson($event)" (onEditArray)="editRow($event)" (onClose)="removeArray(selected)" [json]="selected"></noded-json-info>
+			</ng-content>
+			<ng-content *ngIf="!selected.type.includes('json')">
+				<noded-array-info (onEdit)="editRow($event)" (onClose)="removeArray(selected)" [array]="selected"></noded-array-info>
+			</ng-content>
+		</div>
+	</div>
+</div>
+
+<div class="div-x div-back" *ngFor="let selected of selectedJson">
+	<div class="card div-back-item shadow" *ngIf="selected">
+			<ng-content *ngIf="selected.type == 'json[]'">
+				<noded-json-info (onEdit)="editRow($event)" (onEditJson)="addEditJson($event)" (onEditArray)="editArray($event)" (onClose)="removeJson(selected)" [data]="selected"></noded-json-info>
+			</ng-content>
+			<ng-content *ngIf="selected.type == 'json'">
+				<noded-json-info-one (onEdit)="editRow($event)" (onEditJson)="addEditJson($event)" (onEditArray)="editArray($event)" (onClose)="removeJson(selected)" [data]="selected"></noded-json-info-one>
+			</ng-content>
+	</div>
+</div>
+<!-- <div class="div-x div-back" *ngFor="let selected of selectedArray">
+	<div class="card div-back-item shadow" *ngIf="selected">
+		<noded-json-info (onEdit)="editRow($event)" (onEditJson)="addEditJson($event)"  (onClose)="removeJson(selected)" [data]="selected"></noded-json-info>
+	</div>
+</div>-->
+<!-- </div>-->

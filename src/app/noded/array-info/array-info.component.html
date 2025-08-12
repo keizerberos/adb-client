@@ -1,0 +1,49 @@
+<!-- <div class="input-group input-group-sm mb-1" *ngIf="array">
+	 <span class="input-group-text">
+		<select [disabled]="array.locked" class="form-select form-select-sm " [value]="array.type"  (input)="array.type = val($event); array.setType(val($event))" aria-label=".form-select-sm example">
+			<option value="string">Text</option>
+			<option value="number" selected>Number</option>
+			<option value="json">JSON</option>
+			<option value="string[]">Text []</option>
+			<option value="number[]" selected>Number []</option>
+			<option value="json[]">JSON []</option>
+			<option value="in">In</option>
+			<option value="out">Out</option>
+		</select>
+	</span> -->
+	<!-- <span class="input-group-text" id="basic-addon3">{{array.name}}</span> -->
+	<!--<input type="text" placeholder="Name" class="input-group-text form-control" id="basic-url" [readOnly]="array.locked" [value]="array.getName()" (input)="array.setName(val($event))">
+	<ng-content>
+		<ng-content *ngIf="array.type=='string'"><input placeholder="Value" type="text" class=" form-control" id="basic-url" [value]="array.getValue()" (input)="array.setValue(val($event))"></ng-content>
+		<ng-content *ngIf="array.type=='number'"><input placeholder="0" type="number" class=" form-control" id="basic-url" [value]="array.getValue()" (input)="array.setValue(val($event))"></ng-content>
+		<ng-content *ngIf="array.type=='json'"><span class="btn btn-sm btn-outline-secondary">...</span></ng-content>
+		<ng-content *ngIf="array.type=='json[]'"><span (click)="onEdit.emit(array)" class="btn btn-sm btn-outline-secondary">...</span></ng-content>
+		<ng-content *ngIf="array.type=='string[]'"><span (click)="onEdit.emit(array)" class="btn btn-sm btn-outline-secondary">...</span></ng-content>
+		<ng-content *ngIf="array.type=='number[]'"><span (click)="onEdit.emit(array)" class="btn btn-sm btn-outline-secondary">...</span></ng-content>
+	</ng-content> 
+	<span *ngIf="!array.locked" class="btn  btn-sm btn-outline-danger" (click)="array.remove()">-</span>
+</div>-->
+
+<span class="btn btn-sm btn-outline-secondary" (click)="onClose.emit()">cerrar</span>
+<span class="btn btn-sm btn-outline-secondary" (click)="save()">guardar</span>
+<span class="btn btn-sm btn-outline-secondary" (click)="addItem()">agregar</span>
+
+<span class="label ms-4" >  {{array.name}}</span>
+<ng-content *ngFor="let value of values">
+	<div class="input-group input-group-sm mb-1" *ngIf="array">
+		<ng-content *ngIf="type=='string[]'"><input class="input-group-text input-group-text-sm form-control" type="text" [(ngModel)]="value.value" (input)="updateValue()"/></ng-content>
+		<ng-content *ngIf="type=='number[]'"><input class="input-group-text input-group-text-sm form-control" type="number" [(ngModel)]="value.value" (input)="updateValue()"/></ng-content>
+		<span *ngIf="!array.locked" class="btn  btn-sm btn-outline-danger" (click)="remoteItem(value)">-</span>	
+	</div>
+</ng-content>
+<!--
+	<div class="input-group input-group-sm mb-1" *ngIf="array">
+		<input class="input-group-text input-group-text-sm form-control" type="text" value="ds"/>
+		<span *ngIf="!array.locked" class="btn  btn-sm btn-outline-danger" (click)="array.remove()">-</span>	
+	</div>
+
+	<div class="input-group input-group-sm mb-1" *ngIf="array">
+		<input class="input-group-text input-group-text-sm form-control" type="text" value="ds"/>
+		<span *ngIf="!array.locked" class="btn  btn-sm btn-outline-danger" (click)="array.remove()">-</span>	
+	</div>
+-->

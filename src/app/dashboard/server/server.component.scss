@@ -1,0 +1,45 @@
+.server-block{
+  display:inline-block;
+  border:1px solid #5b5b5b;
+  border-radius: 4px;
+  width:300px;
+  height:150px;
+  margin:5px;
+  font-size: smaller;
+  background-color: #1e1e1e;
+  color: rgb(255, 255, 255);
+}
+.block-header{
+
+}
+.block-table{
+  width:100%;
+  margin-left:5px;
+  margin-right:5px;
+}
+.block-measure{
+  width:100%;
+  padding:10px;
+}
+.block-bar{
+  width:100%;
+  margin-bottom: 2px;
+  height:15px;
+  border:2px solid #0ec539;
+  border-radius: 2px;
+  background-color: #0c0b0b;
+}
+.block-line{
+  display:block;
+  float: inline-start;
+  width:4px;
+  margin-left: 1px;
+  height:11px;
+  background-color: #0ec539;
+}
+.block-line-yellow{
+  background-color: #efff08;
+}
+.block-line-red{
+  background-color: #ff2908;
+}

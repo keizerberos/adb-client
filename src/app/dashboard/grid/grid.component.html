@@ -1,0 +1,5 @@
+<div id="mainBoard" *ngIf="servers">
+    <ng-content *ngFor="let server of servers ">
+        <app-server [server]="server"></app-server>
+    </ng-content>    
+</div>

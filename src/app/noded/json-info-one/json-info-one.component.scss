@@ -1,0 +1,29 @@
+
+
+.fixed-div {
+  position: absolute;
+  float: inline-end;
+  opacity: 0.8;
+  scale: 1;
+  top: 10px;
+  right: 0px;
+  width: 25%;
+  max-height: 90%;
+  overflow-y: auto;
+  height: auto;
+}
+.json-table{
+	overflow-x: auto;
+	font-size: 6pt;
+}
+.small-font{
+	font-size: 6pt;
+}
+.small-font-select{
+	font-size: 6pt;
+	min-width:100px;
+}
+.small-font-header{
+	font-size: 6pt;
+	font-weight: bold;
+}

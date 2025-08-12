@@ -1,0 +1,82 @@
+
+.div-x {
+	display: block;
+	float:inline-end;
+  	width: auto;
+}
+.fixed-div-all {
+  top: 0px;
+  right: 0px;
+  width: auto;
+  max-width: 50%;
+  max-height: 90%;
+  overflow-y: auto;
+  height: auto;
+}
+
+
+.div-back{
+	position: absolute;
+	top:0;
+	left:0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.1);
+  	box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0);
+}
+.div-back-item{	
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.fixed-div {
+  position: absolute;
+  float: inline-end;
+  opacity: 0.8;
+  top: 10px;
+  right: 0px;
+  width: 25%;
+  max-height: 50%;
+  overflow-y: auto;
+  height: auto;
+}
+
+.fixed-div-top {
+  position:absolute;
+  float: inline-end;
+  opacity: 0.8;
+  right: 0px;
+  width: auto;
+  max-width: 100%;
+  overflow-y: auto;
+  height: auto;
+}
+
+.fixed-div-bottom {
+  position: absolute;
+  float: inline-end;
+  opacity: 0.8;
+  bottom: 10px;
+  right: 0px;
+  width: auto;
+  max-height: 50%;
+  max-width: 100%;
+  overflow-y: auto;
+  height: auto;
+}
+
+
+.fixed-div-bottom2 {
+  position: absolute;
+  float: inline-end;
+  opacity: 0.8;
+  bottom: 10px;
+  right: 0px;
+  width: auto;
+  max-width: 100%;
+  overflow-y: auto;
+  height: auto;
+}

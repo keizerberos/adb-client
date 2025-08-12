@@ -1,0 +1,45 @@
+<div class="div-central">
+	<dashboard-grid [servers]="servers"></dashboard-grid>
+</div>
+
+<!--
+<div class="div-central">
+	<noded-grid (onTableSelected)="onTableSelected($event)" (onRelationSelected)="onRelationSelected($event)" [selectedTable]="selectedTable"></noded-grid>
+	<div class="menuFlotante">
+		<span class="btn btn-sm btn-outline-primary" id="btnGuardar">Guardar</span>
+		<span class="btn btn-sm btn-outline-success" id="btnCargar">Cargar</span>
+		<span class="btn btn-sm btn-outline-warning" id="btnExportar">Exportar</span>
+		<span class="btn btn-sm btn-outline-warning" id="btnImportar">Importar</span>
+	</div>
+	<div class="menuFlotanteLevel2">
+		<span class="btn btn-sm btn-outline-primary" id="btnNewtable">+ Tabla (T)</span>
+	</div>
+	<noded-table-info *ngIf="selectedTable" [table]="selectedTable"></noded-table-info>
+	
+<div class="div-x div-back " *ngFor="let selected of selectedArray">
+	<div class="card div-back-item shadow" *ngIf="selected">
+		<div class="card-body">
+			<ng-content *ngIf="selected.type=='json'">
+				 <noded-json-info-one (onEdit)="editRow($event)" (onEditJson)="addEditJson($event)" (onEditArray)="editRow($event)" (onClose)="removeArray(selected)" [json]="selected"></noded-json-info-one> 
+			</ng-content>			
+			<ng-content *ngIf="selected.type == 'json[]'">
+				 <noded-json-info (onEdit)="editRow($event)" (onEditJson)="addEditJson($event)" (onEditArray)="editRow($event)" (onClose)="removeArray(selected)" [json]="selected"></noded-json-info> 
+			
+			</ng-content>
+			<ng-content *ngIf="!selected.type.includes('json')">
+				 <noded-array-info (onEdit)="editRow($event)" (onClose)="removeArray(selected)" [array]="selected"></noded-array-info> 
+			</ng-content>
+		</div>
+	</div>
+</div>
+<div class="div-x div-back" *ngFor="let selected of selectedJson">
+	<div class="card div-back-item shadow" *ngIf="selected">
+			<ng-content *ngIf="selected.type == 'json[]'">
+				<noded-json-info (onEdit)="editRow($event)" (onEditJson)="addEditJson($event)" (onEditArray)="editArray($event)" (onClose)="removeJson(selected)" [data]="selected"></noded-json-info>
+			</ng-content>
+			<ng-content *ngIf="selected.type == 'json'">
+				<noded-json-info-one (onEdit)="editRow($event)" (onEditJson)="addEditJson($event)" (onEditArray)="editArray($event)" (onClose)="removeJson(selected)" [data]="selected"></noded-json-info-one>
+			</ng-content>
+	</div>
+</div>
+-->
