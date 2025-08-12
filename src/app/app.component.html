@@ -1,45 +1,155 @@
-<div class="div-central">
-	<dashboard-grid [servers]="servers"></dashboard-grid>
-</div>
+<div class="container-fluid row p-5">
+	<div class="col-6 m-0 ">
+		<h2 id="lDevicesTitle">Dispositivos ({{devices.length}})</h2>
+		<button id="bRefresh" (click)="refresh()" class="btn btn-sm btn-outline-primary">Actualizar <i class="bi bi-repeat"></i></button>
+		<button id="bUnlock" class="btn btn-sm btn-outline-danger">Desbloquear <i class="bi bi-unlock"></i></button>
+		<button id="bLock" class="btn btn-sm btn-outline-danger">Bloquear <i class="bi bi-lock"></i></button>
+		<button id="bHome" (click)="goHome()" class="btn btn-sm btn-outline-primary">Home <i class="bi bi-house"></i></button>
+		<button id="bRefresh" class="btn btn-sm btn-outline-secondary disabled">Captura <i
+				class="bi bi-record"></i></button>
+		<div class="d-flex flex-row">
+			<div class="form-check form-switch me-4">
+				<input class="form-check-input" type="checkbox" role="switch" id="bWifi" checked />
+				<label class="form-check-label " for="bWifi">Wifi</label>
+			</div>
+			<div class="form-check form-switch me-4">
+				<input class="form-check-input" type="checkbox" role="switch" id="bDatos" checked />
+				<label class="form-check-label " for="bDatos">Datos</label>
+			</div>
+		</div>
+		<div class="container-fluid ">
+				<div class="row" id="dDevices">
+					<ng-content *ngFor="let device of devices">
+							<div role="button" id="dev-{{device.onlySerial}}" class="card row col-sm-2 m-1 p-1">
+								<div class="action-title d-none act-'+d.onlySerial+'">loading...</div>
+								<label class="col-12" style="font-size:6pt"> {{device.onlySerial}}</label>
+								<div class="col-12">
+									<canvas id="{{'canvas'+device.onlySerial}}" data-id="canvas{{device.onlySerial}}" class="imgDevice" 
+										width="90px"		
+										height="201px"></canvas>
+								</div>
+							</div>
+					</ng-content>
+				</div>					
+		</div>
+	</div>
+	<div class="m-0 p-0 col-1   ">
+		<h2> &nbsp;</h2>
+		<div class="row m-0 p-0 text-center" id="chkDevices">
+			<div class="col-sm-4 mb-1 m-0 p-0">
+				<input type="checkbox" class="btn-check" id="chk1" checked autocomplete="off">
+				<label class="btn btn-sm btn-outline-primary" for="chk1">1</label><br>
+			</div>
+		</div>
+		<div class="row m-0 p-0 text-center">
+			<div class="col-sm-4 m-0 p-0">
+				<input type="checkbox" class="btn-check" id="chkAll" checked autocomplete="off">
+				<label class="btn btn-sm btn-outline-primary" for="chkAll">Todos</label><br>
+			</div>
+		</div>
+	</div>
+	<div class="col-5">
+		<div class="container-fluid">
+			<h2>Tareas automatizadas</h2>
+			<div class="container-fluid">
+				<div class="accordion" id="accTasks">
+					<div class="accordion-item">
+						<h2 class="accordion-header">
+							<button class="accordion-button" type="button" data-bs-toggle="collapse"
+								data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+								Facebook - "Me gusta"
+							</button>
+						</h2>
+						<div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accTasks">
+							<div class="accordion-body">
+								<div class="mb-3 row">
+									<label for="inputPassword" class="col-sm-1 col-form-label">URL</label>
+									<div class="col-sm-11">
+										<input type="text" class="form-control" id="inputPassword">
+									</div>
+								</div>
+								<div class="mb-3 text-end">
+									<button id="bRefreshs" class="btn  btn-success">Ejecutar<i class="bi bi-play"></i>
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container-fluid m-0 p-0">
+			<h2>Configuraciones automatizadas</h2>
+			<div class="container-fluid">
+				<div class="accordion" id="accConfigTasks">
+					<div class="accordion-item">
+						<h2 class="accordion-header">
+							<button class="accordion-button" type="button" data-bs-toggle="collapse"
+								data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+								Facebook - "Me gusta"
+							</button>
+						</h2>
+						<div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accTasks">
+							<div class="accordion-body">
+								<div class="mb-3 row">
+									<label for="inputPassword" class="col-sm-1 col-form-label">URL</label>
+									<div class="col-sm-11">
+										<input type="text" class="form-control" id="inputPassword1">
+									</div>
+								</div>
+								<div class="mb-3 text-end">
+									<button id="bRefreshs" class="btn  btn-success">Ejecutar<i class="bi bi-play"></i>
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="container-fluid d-none">
+		<div class="row col-12">
+			<h4>URL </h4>
+			<input class="form-input" type="text" id="tUrl" />
+			<label id="lUrl"></label>
+		</div>
+		<div class="row col-12">
+			<h4>Acciones </h4>
+			<table class="table table-sm">
+				<tbody id="tActions"></tbody>
+			</table>
+		</div>
+		<div class="row col-6">
+			<textarea id="tRequest"></textarea>
+			<button id="bRequest" class="btn btn-sm btn-primary">Enviar</button>
+		</div>
+		<div class="row col-6">
+			<h2>Dispositivos</h2>
+			<div class="col-12">
+				<table class="table table-sm">
+					<thead>
+						<tr>
+							<th>Accion</th>
+							<th>Descripción</th>
+							<th>Parametros</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody id="tDevices">
 
-<!--
-<div class="div-central">
-	<noded-grid (onTableSelected)="onTableSelected($event)" (onRelationSelected)="onRelationSelected($event)" [selectedTable]="selectedTable"></noded-grid>
-	<div class="menuFlotante">
-		<span class="btn btn-sm btn-outline-primary" id="btnGuardar">Guardar</span>
-		<span class="btn btn-sm btn-outline-success" id="btnCargar">Cargar</span>
-		<span class="btn btn-sm btn-outline-warning" id="btnExportar">Exportar</span>
-		<span class="btn btn-sm btn-outline-warning" id="btnImportar">Importar</span>
-	</div>
-	<div class="menuFlotanteLevel2">
-		<span class="btn btn-sm btn-outline-primary" id="btnNewtable">+ Tabla (T)</span>
-	</div>
-	<noded-table-info *ngIf="selectedTable" [table]="selectedTable"></noded-table-info>
-	
-<div class="div-x div-back " *ngFor="let selected of selectedArray">
-	<div class="card div-back-item shadow" *ngIf="selected">
-		<div class="card-body">
-			<ng-content *ngIf="selected.type=='json'">
-				 <noded-json-info-one (onEdit)="editRow($event)" (onEditJson)="addEditJson($event)" (onEditArray)="editRow($event)" (onClose)="removeArray(selected)" [json]="selected"></noded-json-info-one> 
-			</ng-content>			
-			<ng-content *ngIf="selected.type == 'json[]'">
-				 <noded-json-info (onEdit)="editRow($event)" (onEditJson)="addEditJson($event)" (onEditArray)="editRow($event)" (onClose)="removeArray(selected)" [json]="selected"></noded-json-info> 
-			
-			</ng-content>
-			<ng-content *ngIf="!selected.type.includes('json')">
-				 <noded-array-info (onEdit)="editRow($event)" (onClose)="removeArray(selected)" [array]="selected"></noded-array-info> 
-			</ng-content>
+						<tr>
+							<td><input type='checkbox' data-id='"+d.onlySerial+"' checked=checked /></td>
+							<td>"+d.model+"</td>
+							<td>"+d.serial+"</td>
+						</tr>
+
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="row col-12">
+
 		</div>
 	</div>
 </div>
-<div class="div-x div-back" *ngFor="let selected of selectedJson">
-	<div class="card div-back-item shadow" *ngIf="selected">
-			<ng-content *ngIf="selected.type == 'json[]'">
-				<noded-json-info (onEdit)="editRow($event)" (onEditJson)="addEditJson($event)" (onEditArray)="editArray($event)" (onClose)="removeJson(selected)" [data]="selected"></noded-json-info>
-			</ng-content>
-			<ng-content *ngIf="selected.type == 'json'">
-				<noded-json-info-one (onEdit)="editRow($event)" (onEditJson)="addEditJson($event)" (onEditArray)="editArray($event)" (onClose)="removeJson(selected)" [data]="selected"></noded-json-info-one>
-			</ng-content>
-	</div>
-</div>
--->

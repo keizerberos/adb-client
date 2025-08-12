@@ -7,21 +7,30 @@ import { Socket } from 'ngx-socket-io';
 export class WebSocketService {
     private webSocket: Socket;
 
-    servers = null;
+    devices = [];
     events = {
         servers:[],
         connect:[],
+        devices:[],
+        capture:[],
+        disconnect:[],
     };
     constructor() {
         this.webSocket = new Socket({
-            url: "127.0.0.1:4000",
+            url: "127.0.0.1:7000",
             options: {},
         });
         
         this.events = {
             servers:[],
+            capture:[],
             connect:[],
+            devices:[],
+            disconnect:[],
         };
+    }
+    send(ev,data){
+        this.webSocket.emit(ev, data);
     }
     on(event:string,fn:any){
         this.events[event].push(fn);
@@ -31,39 +40,55 @@ export class WebSocketService {
         this.initialize();
     }
     initialize() {
-        this.webSocket.on('servers',(data)=>{this.getServers(data)});        
-        this.webSocket.on('server.changes',(data)=>{this.updateServer(data)});
-        this.webSocket.on('server.connect',(data)=>{this.connectServer(data)});
+        this.webSocket.on('cluster.connect',(data)=>{ console.log("cluster.connect",data); });     
+        this.webSocket.on('clusters',(data)=>{ console.log("clusters",data); });        
+        this.webSocket.on('devices',(data)=>{ this.connectDevices(data); console.log("devices",data); });        
+        this.webSocket.on('device.connect',(data)=>{ this.connectDevice(data); console.log("device.connect",data); });
+        this.webSocket.on('device.capture',(data)=>{ this.screenDevice(data);  });
+        this.webSocket.on('device.disconnect',(data)=>{ this.disconnectDevice(data); console.log("device.disconnect",data); });
     }
-    connectServer(data){
-        //console.log("servers",data);
-        console.log("connect server",data);
-        const server = JSON.parse(data);
-        if (this.servers == null)
-            this.servers = [server];
-		else{
-			
-            const tempServer = this.servers.find(s=>s.id==server.id);
-            if (tempServer==null) {
-                this.servers.push(server);
-            }else{
-                Object.keys(server).forEach(k=>{
-                    tempServer[k] = server[k];
-                });					
-            }
-		}
-        this.events.connect.forEach(fn=>fn(server));
+    screenDevice(data){
+        console.log("screenDevice data",data);
+        
+        const tempDevice = this.devices.find(s=>s.serial == data.serial);
+        if (tempDevice != null) {            
+            this.events.capture.forEach(fn=>fn(tempDevice,data.data));
+        }
+    }
+    connectDevice(device){
+        console.log("connect device",device);
+        console.log("this.devices",this.devices);
+        
+        const tempDevice = this.devices.find(s=>s.serial == device.serial);
+        if (tempDevice == null) {
+            this.devices.push(device);
+        }
+        this.events.connect.forEach(fn=>fn(device));
+    }
+    connectDevices(devices){
+        console.log("connect devices",devices);
+        devices.forEach(device=>this.connectDevice(device));
+        this.events.devices.forEach(fn=>fn(this.devices));
+    }
+    disconnectDevice(device){
+        console.log("disconnect device",device);
+        
+        const tempDevice = this.devices.find(s=>s.serial==device.serial);
+        if (tempDevice!=null) {
+            this.devices.splice(this.devices.indexOf(tempDevice),1);
+        }
+        this.events.disconnect.forEach(fn=>fn(device));
     }
     getServers(data){
         //console.log("servers",data);
         const servers = JSON.parse(data);
-        if (this.servers == null)
-            this.servers = servers;
+        if (this.devices == null)
+            this.devices = servers;
 		else{
 			servers.forEach(server=>{
-				const tempServer = this.servers.find(s=>s.id==server.id);
+				const tempServer = this.devices.find(s=>s.id==server.id);
 				if (tempServer==null) {
-					this.servers.push(server);
+					this.devices.push(server);
 				}else{
 					Object.keys(server).forEach(k=>{
 						tempServer[k] = server[k];
@@ -76,8 +101,8 @@ export class WebSocketService {
     updateServer(data){
         console.log("updateServer data",data);
         const dataJson = JSON.parse(data);
-        if (this.servers == null ) return;
-        const server = this.servers.find(s=>s.id == dataJson.id );        
+        if (this.devices == null ) return;
+        const server = this.devices.find(s=>s.id == dataJson.id );        
         if (server == null) return;
         Object.keys(dataJson.changes).forEach(k=>{            
             if ( Array.isArray(dataJson.changes[k]) && Array.isArray(server[k]) ){
