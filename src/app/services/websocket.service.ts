@@ -8,11 +8,15 @@ export class WebSocketService {
     private webSocket: Socket;
 
     devices = [];
+    tasks = [];
     events = {
         servers:[],
         connect:[],
         devices:[],
         capture:[],
+		actions:[],
+		progress:[],
+        tasks:[],
         disconnect:[],
     };
     constructor() {
@@ -24,7 +28,10 @@ export class WebSocketService {
         this.events = {
             servers:[],
             capture:[],
+        	tasks:[],
+        	actions:[],
             connect:[],
+			progress:[],
             devices:[],
             disconnect:[],
         };
@@ -42,25 +49,44 @@ export class WebSocketService {
     initialize() {
         this.webSocket.on('cluster.connect',(data)=>{ console.log("cluster.connect",data); });     
         this.webSocket.on('clusters',(data)=>{ console.log("clusters",data); });        
+        this.webSocket.on('tasks',(data)=>{ this.receivedTasks(data); console.log("tasks",data); });       
+        this.webSocket.on('actions',(data)=>{ this.receivedActions(data); console.log("actions",data); });        
         this.webSocket.on('devices',(data)=>{ this.connectDevices(data); console.log("devices",data); });        
         this.webSocket.on('device.connect',(data)=>{ this.connectDevice(data); console.log("device.connect",data); });
         this.webSocket.on('device.capture',(data)=>{ this.screenDevice(data);  });
+        this.webSocket.on('task.progress',(data)=>{ this.taskProgress(data);  });
         this.webSocket.on('device.disconnect',(data)=>{ this.disconnectDevice(data); console.log("device.disconnect",data); });
     }
     screenDevice(data){
-        console.log("screenDevice data",data);
+        //console.log("screenDevice data",data);
         
         const tempDevice = this.devices.find(s=>s.serial == data.serial);
         if (tempDevice != null) {            
             this.events.capture.forEach(fn=>fn(tempDevice,data.data));
         }
     }
+    taskProgress(data){
+        console.log("taskProgress data",data);
+        
+        const tempDevice = this.devices.find(s=>s.serial == data.serial);
+        if (tempDevice != null) {            
+            this.events.progress.forEach(fn=>fn(tempDevice,data.data));
+        }
+    }
+	receivedTasks(data){
+		this.events.tasks.forEach(fn=>fn(data));
+	}
+	receivedActions(data){
+		this.events.actions.forEach(fn=>fn(data));
+	}
     connectDevice(device){
         console.log("connect device",device);
         console.log("this.devices",this.devices);
         
         const tempDevice = this.devices.find(s=>s.serial == device.serial);
         if (tempDevice == null) {
+			device['checked'] = true;
+			device['selected'] = 1;
             this.devices.push(device);
         }
         this.events.connect.forEach(fn=>fn(device));
@@ -69,6 +95,13 @@ export class WebSocketService {
         console.log("connect devices",devices);
         devices.forEach(device=>this.connectDevice(device));
         this.events.devices.forEach(fn=>fn(this.devices));
+		this.devices.sort((a,b)=>{
+			 if (a.number < b.number) 
+				return -1;
+			if (a.number > b.number) 
+				return 1;
+			return 0;
+		});
     }
     disconnectDevice(device){
         console.log("disconnect device",device);

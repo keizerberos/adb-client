@@ -1,15 +1,14 @@
-<div class="container-fluid row p-5">
+<div class="fullcontainer container-fluid row p-5" (wheel)="onWheelEvent($event)">
 	<div class="col-6 m-0 ">
 		<h2 id="lDevicesTitle">Dispositivos ({{devices.length}})</h2>
 		<button id="bRefresh" (click)="refresh()" class="btn btn-sm btn-outline-primary">Actualizar <i class="bi bi-repeat"></i></button>
 		<button id="bUnlock" class="btn btn-sm btn-outline-danger">Desbloquear <i class="bi bi-unlock"></i></button>
 		<button id="bLock" class="btn btn-sm btn-outline-danger">Bloquear <i class="bi bi-lock"></i></button>
 		<button id="bHome" (click)="goHome()" class="btn btn-sm btn-outline-primary">Home <i class="bi bi-house"></i></button>
-		<button id="bRefresh" class="btn btn-sm btn-outline-secondary disabled">Captura <i
-				class="bi bi-record"></i></button>
+		<!-- <button id="bRefresh" class="btn btn-sm btn-outline-secondary disabled">Captura <i	class="bi bi-record"></i></button> -->
 		<div class="d-flex flex-row">
 			<div class="form-check form-switch me-4">
-				<input class="form-check-input" type="checkbox" role="switch" id="bWifi" checked />
+				<input class="form-check-input" (click)="changeWifi($event)" type="checkbox" role="switch" id="bWifi" checked />
 				<label class="form-check-label " for="bWifi">Wifi</label>
 			</div>
 			<div class="form-check form-switch me-4">
@@ -18,33 +17,33 @@
 			</div>
 		</div>
 		<div class="container-fluid ">
-				<div class="row" id="dDevices">
-					<ng-content *ngFor="let device of devices">
-							<div role="button" id="dev-{{device.onlySerial}}" class="card row col-sm-2 m-1 p-1">
-								<div class="action-title d-none act-'+d.onlySerial+'">loading...</div>
-								<label class="col-12" style="font-size:6pt"> {{device.onlySerial}}</label>
-								<div class="col-12">
-									<canvas id="{{'canvas'+device.onlySerial}}" data-id="canvas{{device.onlySerial}}" class="imgDevice" 
-										width="90px"		
-										height="201px"></canvas>
-								</div>
-							</div>
-					</ng-content>
-				</div>					
+			<div class="row" id="dDevices" >
+				<ng-content *ngFor="let device of devices">
+					<div *ngIf="device.selected>0"  (dblclick)="selectDevice(device)" role="button" id="dev-{{device.onlySerial}}" class="card row col-sm-2 m-1 p-1" [ngStyle]="{opacity:device.checked?1:0.3,width:device.selected==2?width+'px':widthless+'px'}">
+						<div class="action-title d-none act-'+d.onlySerial+'">loading...</div>
+						<label class="col-12" style="font-size:6pt"> {{device.onlySerial}}</label>
+						<div class="col-12">
+							<canvas  (mousedown)="mouseDown(device,$event)" (mousemove)="mouseMove(device,$event)"  (mouseup)="mouseUp(device,$event)"  id="{{'canvas'+device.onlySerial}}" data-id="canvas{{device.onlySerial}}" class="imgDevice" width="750px" height="1612px" ></canvas>
+						</div>
+					</div>
+				</ng-content>
+			</div>
 		</div>
 	</div>
 	<div class="m-0 p-0 col-1   ">
 		<h2> &nbsp;</h2>
 		<div class="row m-0 p-0 text-center" id="chkDevices">
-			<div class="col-sm-4 mb-1 m-0 p-0">
-				<input type="checkbox" class="btn-check" id="chk1" checked autocomplete="off">
-				<label class="btn btn-sm btn-outline-primary" for="chk1">1</label><br>
-			</div>
+			<ng-content *ngFor="let device of devices;let i = index ">
+				<div class="col-sm-4 mb-1 m-0 p-0">
+					<input type="checkbox" class="btn-check" id="chk1-{{i}}" [checked]="device.checked" [(ngModel)]="device.checked"  autocomplete="off">
+					<label class="btn btn-sm btn-outline-primary" for="chk1-{{i}}">{{device.number}}</label><br>
+				</div>
+			</ng-content>
 		</div>
 		<div class="row m-0 p-0 text-center">
 			<div class="col-sm-4 m-0 p-0">
-				<input type="checkbox" class="btn-check" id="chkAll" checked autocomplete="off">
-				<label class="btn btn-sm btn-outline-primary" for="chkAll">Todos</label><br>
+				<input type="checkbox" class="btn-check" [(ngModel)]="checkedAll" id="chkAll" autocomplete="off">
+				<label (click)="checkAll()" class="btn btn-sm btn-outline-primary" for="chkAll">Todos</label><br>
 			</div>
 		</div>
 	</div>
@@ -54,9 +53,56 @@
 			<div class="container-fluid">
 				<div class="accordion" id="accTasks">
 					<div class="accordion-item">
+						<ng-content *ngFor="let task of tasks">
+							<h2 class="accordion-header">
+								<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${key}" aria-expanded="false" aria-controls="{}">
+									<span [innerHTML]="s(task.description)"></span>
+								</button>
+							</h2>
+							<div id="collapse${key}" class="accordion-collapse collapse " data-bs-parent="#accTasks">
+								<div class="accordion-body">
+									<div class="mb-3 row divParams">
+										<ng-content *ngFor="let param of task.paramsArray">
+											<label for="inputPassword" class="col-sm-1 col-form-label">{{param.id}}</label>
+											<div class="col-sm-11">
+												<textarea type="text" oninput="" class="form-control" [(ngModel)]="param.value" ></textarea>
+											</div>
+										</ng-content>
+									</div>
+									<div class="mb-3 text-end divButtons">
+										<button data-bs-toggle="collapse" data-bs-target="#col-nodes-${key}" aria-expanded="false" aria-controls="col-nodes-${key}" class="btn btn-outline-secondary">Nodos<i class="bi bi-diagram-2"></i> </button>
+										<button (click)="execute(task)" class="bPlay btn btn-success">Ejecutar<i class="bi bi-play"></i> </button>
+										<button class="bStop d-none btn btn-danger">Detener<i class="bi bi-stop"></i> </button>
+									</div>
+									<div class="collapse" id="col-nodes-${key}">
+										<div class="card card-body divNode">
+
+										</div>
+									</div>
+									<div class="modal fade text-center" id="modal-${key}" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+										<div class="modal-dialog modal-fullscreen align-middle modal-xl">
+											<div class="modal-content " style="width:auto;">
+
+												<div class="modal-body ">
+													<img class='imgFull' role='button' data-bs-toggle='modal' data-bs-target='#staticBackdrop' src='' crossorigin='Anonymous' />
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</ng-content>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container-fluid m-0 p-0">
+			<h2>Configuraciones automatizadas</h2>
+			<div class="container-fluid">
+				<div class="accordion" id="accConfigTasks">
+					<div class="accordion-item">
 						<h2 class="accordion-header">
-							<button class="accordion-button" type="button" data-bs-toggle="collapse"
-								data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+							<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
 								Facebook - "Me gusta"
 							</button>
 						</h2>
@@ -65,7 +111,7 @@
 								<div class="mb-3 row">
 									<label for="inputPassword" class="col-sm-1 col-form-label">URL</label>
 									<div class="col-sm-11">
-										<input type="text" class="form-control" id="inputPassword">
+										<input type="text" class="form-control" id="inputPassword1">
 									</div>
 								</div>
 								<div class="mb-3 text-end">
@@ -79,13 +125,12 @@
 			</div>
 		</div>
 		<div class="container-fluid m-0 p-0">
-			<h2>Configuraciones automatizadas</h2>
+			<h2>Tareas</h2>
 			<div class="container-fluid">
 				<div class="accordion" id="accConfigTasks">
 					<div class="accordion-item">
 						<h2 class="accordion-header">
-							<button class="accordion-button" type="button" data-bs-toggle="collapse"
-								data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+							<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
 								Facebook - "Me gusta"
 							</button>
 						</h2>
