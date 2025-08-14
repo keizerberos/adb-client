@@ -72,6 +72,14 @@ export class AppComponent implements OnInit, OnDestroy {
 		if ( event.target.checked ) this.dataOn();
 		else this.dataOff();
 	}
+	changeChecked(device){
+		if (this.selectedDevice==null)
+			device.checked=!device.checked;
+	}
+	stopTasks(){
+		
+			this.websocketService.send("tasks.stop", {});
+	}
 	offScreen(){
 		
 		 let devicesChecked = this.devices.filter(d=>d.checked);
@@ -137,8 +145,10 @@ export class AppComponent implements OnInit, OnDestroy {
 	onWheelEvent(event) {
 		const deltaY = event.deltaY; // Vertical scroll amount
 		const deltaX = event.deltaX; // Horizontal scroll amount
-		this.width -= deltaY;
-		this.widthless -= deltaY/10;
+		if(this.width-deltaY>0)
+			this.width -= deltaY;
+		if(this.widthless-deltaY/10>0)
+			this.widthless -= deltaY/10;
 		console.log('Wheel event:', event);
 		console.log('Delta Y:', deltaY);
 		//console.log('Delta X:', deltaX);
@@ -231,6 +241,7 @@ export class AppComponent implements OnInit, OnDestroy {
 		if (device.selected<2){			
 			this.devices.forEach(d=>{ d.selected = 0});
 			device.selected = 2;
+			this.devices.checked = true;	
 			this.selectedDevice = device;		
 			this.startRec(device);
 			this.refresh();

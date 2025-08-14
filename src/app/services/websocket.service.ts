@@ -21,7 +21,7 @@ export class WebSocketService {
     };
     constructor() {
         this.webSocket = new Socket({
-            url: "127.0.0.1:7000",
+            url: "172.20.50.123:7000",
             options: {},
         });
         
@@ -103,10 +103,15 @@ export class WebSocketService {
 			device['selected'] = 1;
             if (device['progress']!=undefined){
                 device['progress'].path.forEach(path=>{                
-                    if (device['progress'].completed.includes(path.id) )
-                        path['completed'] = true;
-                    else
+                    if (device['progress'].completed.find(c=>c==path.id)!=undefined ){
+                        path['completed'] = true;				
+                    }else{
                         path['completed'] = false;
+                    }
+                    if (device['progress'].current==path.id)
+                        path['current'] = true;
+                    else
+                        path['current'] = false;
                 });
             }
 

@@ -99,7 +99,7 @@ body {
 
 .table-scrolled{
   overflow-y: auto;
-  height:200px;
+  height:50%;
   font-size:8pt ;
 }
 .span-fill{
@@ -131,8 +131,50 @@ body {
   border-radius: 5px;
   padding:4px;
 }
+.span-dead{
+  border:1px solid #555;
+  background-color: rgb(0, 97, 208);
+  color:rgb(255, 255, 255);
+  border-radius: 5px;
+  padding:4px;
+}
+
+.span-bad{
+  border:1px solid #555;
+  background-color: rgb(255, 0, 0);
+  color:rgb(255, 255, 255);
+  border-radius: 5px;
+  padding:4px;
+}
 
 .fullcontainer{
   height:700px;
   overflow-y: scroll;
+}
+.div-float{
+
+  text-align: center;
+  color: #fff;
+  background-color: #00000077;
+  position: absolute;
+  top: 0%;
+  width: auto;
+  margin-left: -4px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  font-size: 16pt;
+}
+
+.div-float-right{
+
+  text-align: center;
+  color: #fff;
+  position: absolute;
+  top: 0%;
+  left: 90%;
+  width: auto;
+  padding-left: 30px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  font-size: 8pt;
 }
