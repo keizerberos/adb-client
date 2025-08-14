@@ -96,3 +96,28 @@ body {
 #dDevices{
 	overflow-y: auto;
 }
+
+.table-scrolled{
+  overflow-y: auto;
+  height:200px;
+  font-size:8pt ;
+}
+.span-fill{
+  border:1px solid #555;
+  background-color: green;
+  color:white;
+  border-radius: 5px;
+  padding:4px;
+}
+.span-empty{
+  border:1px solid #555;
+  background-color: white;
+  color:black;
+  border-radius: 5px;
+  padding:4px;
+}
+
+.fullcontainer{
+  height:700px;
+  overflow-y: scroll;
+}

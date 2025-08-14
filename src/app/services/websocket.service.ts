@@ -69,7 +69,16 @@ export class WebSocketService {
         console.log("taskProgress data",data);
         
         const tempDevice = this.devices.find(s=>s.serial == data.serial);
-        if (tempDevice != null) {            
+        if (tempDevice != null) {    
+            data.data.path.forEach(path=>{                
+                if (data.data.completed.includes(path.id) )
+                    path['completed'] = true;
+                else
+                    path['completed'] = false;
+            });
+            
+            console.log("-- taskProgress data",data);
+            tempDevice['progress'] = data.data;
             this.events.progress.forEach(fn=>fn(tempDevice,data.data));
         }
     }
@@ -87,6 +96,15 @@ export class WebSocketService {
         if (tempDevice == null) {
 			device['checked'] = true;
 			device['selected'] = 1;
+            if (device['progress']!=undefined){
+                device['progress'].path.forEach(path=>{                
+                    if (device['progress'].completed.includes(path.id) )
+                        path['completed'] = true;
+                    else
+                        path['completed'] = false;
+                });
+            }
+
             this.devices.push(device);
         }
         this.events.connect.forEach(fn=>fn(device));

@@ -28,6 +28,39 @@ export class AppComponent implements OnInit, OnDestroy {
 	s(txt){
 		return this.sanitizer.bypassSecurityTrustHtml(txt);
 	}
+	convertText(param, event, task){
+
+		console.log("value",event.target.value)
+		let fn = task.functions[param.id];
+		if (fn == "fburl"){
+			param.value = this.facebookUri(event.target.value);
+			event.target.value = param.value
+		}else if (fn == "tkburl"){
+			param.value = this.facebookUri(event.target.value);
+			event.target.value = param.value
+		}else{
+			param.value = event.target.value ;
+		}
+	}
+	 tiktokUri(url){
+		const queryString = url.split("?");
+		if (queryString.length!=2) return url;
+		return queryString[0];
+	}
+	 facebookUri(url){
+		const queryString = url.split("?")[1];
+		if (queryString)
+		console.log(queryString,queryString);
+		const urlParams = new URLSearchParams(queryString);
+		console.log("urlParams",urlParams);
+		let links = $(".d-link");
+		let id = urlParams.get("id");
+		let postid = urlParams.get("story_fbid");
+		if (id == undefined) return url;
+		if (postid == undefined) return url;
+			links.val("https://www.facebook.com/"+id+"/posts/"+postid);
+		return "https://www.facebook.com/"+id+"/posts/"+postid;
+	}
 	ngOnDestroy(): void {
 		this.disconnectSocket();
 	}
@@ -39,6 +72,18 @@ export class AppComponent implements OnInit, OnDestroy {
 		if ( event.target.checked ) this.dataOn();
 		else this.dataOff();
 	}
+	offScreen(){
+		
+		 let devicesChecked = this.devices.filter(d=>d.checked);
+			devicesChecked.forEach((d,ii)=>{
+				let data = {
+					"action":"adb",
+					"devices":d.serial,
+					"data":{"command":'input keyevent 26'}
+				};
+			this.websocketService.send("device.adb", data);
+			});
+	}
 	wifiOn(){
 		
 		 let devicesChecked = this.devices.filter(d=>d.checked);
@@ -46,7 +91,7 @@ export class AppComponent implements OnInit, OnDestroy {
 				let data = {
 					"action":"adb",
 					"devices":d.serial,
-					"data":{"command":'"svc wifi enable"'}
+					"data":{"command":'svc wifi enable'}
 				};
 			this.websocketService.send("device.adb", data);
 			});
@@ -57,7 +102,7 @@ export class AppComponent implements OnInit, OnDestroy {
 				let data = {
 					"action":"adb",
 					"devices":d.serial,
-					"data":{"command":'"svc wifi disable"'}
+					"data":{"command":'svc wifi disable'}
 				};
 			this.websocketService.send("device.adb", data);
 			});
@@ -68,7 +113,7 @@ export class AppComponent implements OnInit, OnDestroy {
 				let data = {
 					"action":"adb",
 					"devices":d.serial,
-					"data":{"command":'"svc data enable"'}
+					"data":{"command":'svc data enable'}
 				};
 			this.websocketService.send("device.adb", data);
 			});
@@ -79,7 +124,7 @@ export class AppComponent implements OnInit, OnDestroy {
 				let data = {
 					"action":"adb",
 					"devices":d.serial,
-					"data":{"command":'"svc data disable"'}
+					"data":{"command":'svc data disable'}
 				};
 			this.websocketService.send("device.adb", data);
 			});
@@ -157,6 +202,14 @@ export class AppComponent implements OnInit, OnDestroy {
 				img.src = u;
 		});
 		this.websocketService.connectSocket('client');
+	}
+	collapseToggle(task){
+		if (task.collapsed==undefined){
+			task['collapsed'] = true;
+		}else{
+			task['collapsed'] = !task['collapsed'];
+		}
+
 	}
 	receiveSocketResponse() {
 		this.websocketService.receiveStatus().subscribe((receivedMessage: string) => {
@@ -257,6 +310,61 @@ export class AppComponent implements OnInit, OnDestroy {
 		this.devices.forEach((d, ii) => { d.checked=this.checkedAll;});
 		this.checkedAll = !this.checkedAll;
 	}
+	installKey(){
+		let devicesChecked = this.devices.filter(d=>d.checked);
+		devicesChecked.forEach((d, ii) => {
+			console.log("installKey");
+			let data = {
+				"action": "adb",
+				"devices": d.serial,
+			};
+			this.websocketService.send("adb.install.keyboard", data);
+		});
+	}
+	installGni(){
+		let devicesChecked = this.devices.filter(d=>d.checked);
+		devicesChecked.forEach((d, ii) => {
+			console.log("installKey");
+			let data = {
+				"action": "adb",
+				"devices": d.serial,
+			};
+			this.websocketService.send("adb.install.gni", data);
+		});
+	}
+	installWifi(){
+		let devicesChecked = this.devices.filter(d=>d.checked);
+		devicesChecked.forEach((d, ii) => {
+			console.log("installKey");
+			let data = {
+				"action": "adb",
+				"devices": d.serial,
+			};
+			this.websocketService.send("adb.install.wifi", data);
+		});
+	}
+	tetheringStart(){
+		let devicesChecked = this.devices.filter(d=>d.checked);
+		devicesChecked.forEach((d, ii) => {
+			console.log("installKey");
+			let data = {
+				"action": "adb",
+				"devices": d.serial,
+			};
+			this.websocketService.send("tethering.start", data);
+		});
+	}
+	tetheringStop(){
+		let devicesChecked = this.devices.filter(d=>d.checked);
+		devicesChecked.forEach((d, ii) => {
+			console.log("installKey");
+			let data = {
+				"action": "adb",
+				"devices": d.serial,
+			};
+			this.websocketService.send("tethering.stop", data);
+		});
+	}
 	goHome() {
 		this.devices.forEach((d, ii) => {
 			console.log("sending goHome");
@@ -267,6 +375,28 @@ export class AppComponent implements OnInit, OnDestroy {
 					"command": "input keyevent 3"
 				}
 			};
+			this.websocketService.send("device.adb", data);
+		});
+	}
+	unlock() {
+		this.devices.forEach((d, ii) => {
+			let data = {
+				"action":"Unlock",
+				"devices":d.serial,
+				"data":null
+			};
+			console.log("sending unlock",data);
+			this.websocketService.send("device.adb", data);
+		});
+	}
+	lock() {
+		this.devices.forEach((d, ii) => {
+			let data = {
+					"action":"Lock",
+					"devices":d.serial,
+					"data":null
+			};
+			console.log("sending lock",data);
 			this.websocketService.send("device.adb", data);
 		});
 	}
