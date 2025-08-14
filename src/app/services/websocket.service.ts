@@ -71,10 +71,15 @@ export class WebSocketService {
         const tempDevice = this.devices.find(s=>s.serial == data.serial);
         if (tempDevice != null) {    
             data.data.path.forEach(path=>{                
-                if (data.data.completed.includes(path.id) )
-                    path['completed'] = true;
-                else
+                if (data.data.completed.find(c=>c==path.id)!=undefined ){
+                    path['completed'] = true;				
+				}else{
                     path['completed'] = false;
+				}
+                if (data.data.current==path.id)
+					path['current'] = true;
+				else
+					path['current'] = false;
             });
             
             console.log("-- taskProgress data",data);

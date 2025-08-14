@@ -206,17 +206,26 @@
 					<tbody id="tDevices">
 
 						 <ng-content *ngFor="let device of devices;let i = index "> 
-							<tr>
-								<td>{{device.number}}</td>
-								<td>
-									<div *ngIf="device.progress">
-										<ng-content *ngFor="let path of device.progress.path">
-											<span [ngClass]="{'span-fill':path.completed,'span-empty':!path.completed}">{{path.id}}</span>
-										</ng-content>
-									</div>
-								</td>
-								<td></td>
-							</tr>
+							<ng-content *ngIf="device.progress">
+								<tr>
+									<td>{{device.number}}</td>
+									<td>
+										<div >
+											<ng-content *ngIf="device.progress.state=='progress'">
+												<ng-content *ngFor="let path of device.progress.path">
+													<span [ngClass]="{'span-fill':path.completed&&!path.current,'span-empty':!path.completed,'span-work':path.current}">{{path.id}}</span>
+												</ng-content>
+											</ng-content>
+											<ng-content *ngIf="device.progress.state=='ended'">
+												<ng-content *ngFor="let path of device.progress.path">
+													<span [ngClass]="{'span-ended':path.completed&&!path.current,'span-empty':!path.completed,'span-work':path.current}">{{path.id}}</span>
+												</ng-content>
+											</ng-content>
+										</div>
+									</td>
+									<td></td>
+								</tr>
+							</ng-content>
 						 </ng-content> 
 					</tbody>
 				</table>

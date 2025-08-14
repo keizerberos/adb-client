@@ -204,6 +204,7 @@ export class AppComponent implements OnInit, OnDestroy {
 		this.websocketService.connectSocket('client');
 	}
 	collapseToggle(task){
+		this.tasks.forEach(t=>t.collapsed=false);
 		if (task.collapsed==undefined){
 			task['collapsed'] = true;
 		}else{
