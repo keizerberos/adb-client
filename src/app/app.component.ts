@@ -236,6 +236,22 @@ export class AppComponent implements OnInit, OnDestroy {
 		//this.websocketService.send("tasks.execute", {devices:devicesFilter.map(d=>d.serial),task:task});
 		this.websocketService.send("tasks.execute", {devices:devicesFilter,task:task});
 	}
+	resume(device,path){
+		console.log("resume.action",path);
+		const taskId = device.progress.taskId;
+		let task = JSON.stringify(this.tasks.find(t=>t.id==taskId));
+		task['resume'] = path.id;
+		let devicesFilter = this.devices.filter(d => d.checked);
+		this.websocketService.send("tasks.resume", {devices:devicesFilter,task:task});
+	}
+	reply(device,path){
+		console.log("reply.action",path);
+		const taskId = device.progress.taskId;
+		let task = JSON.stringify(this.tasks.find(t=>t.id==taskId));
+		task['resume'] = path.id;
+		let devicesFilter = this.devices.filter(d => d.checked);
+		this.websocketService.send("tasks.reply", {devices:devicesFilter,task:task});
+	}
 	selectDevice(device){
 		console.log("device",device);
 		if (device.selected<2){			

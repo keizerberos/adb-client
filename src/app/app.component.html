@@ -208,12 +208,12 @@
 										<div >
 											<ng-content *ngIf="device.progress.state=='progress'">
 												<ng-content *ngFor="let path of device.progress.path">
-													<span [ngClass]="{'span-fill':path.completed&&!path.current,'span-empty':!path.completed,'span-work':path.current}">{{path.id}}</span>
+													<span (click)="reply(device,path)" [ngClass]="{'span-fill':path.completed&&!path.current,'span-empty':!path.completed,'span-work':path.current}">{{path.id}}</span>
 												</ng-content>
 											</ng-content>
 											<ng-content *ngIf="device.progress.state=='ended'">
 												<ng-content *ngFor="let path of device.progress.path">
-													<span [ngClass]="{'span-ended':path.completed&&!path.current,'span-empty':!path.completed,'span-dead':path.current&&path.id==device.progress.end,'span-bad':path.current&&path.id!=device.progress.end}">{{path.id}}</span>
+													<span (click)="resume(device,path)" [ngClass]="{'span-ended':path.completed&&!path.current,'span-empty':!path.completed,'span-dead':path.current&&path.id==device.progress.end,'span-bad':path.current&&path.id!=device.progress.end}">{{path.id}}</span>
 												</ng-content>
 											</ng-content>
 										</div>
