@@ -238,6 +238,7 @@ export class AppComponent implements OnInit, OnDestroy {
 	}
 	resume(device,path){
 		console.log("resume.action",path);
+		if (device.progress.state!='ended') return;
 		const taskId = device.progress.taskId;
 		let task = JSON.stringify(this.tasks.find(t=>t.id==taskId));
 		task['resume'] = path.id;
@@ -246,6 +247,7 @@ export class AppComponent implements OnInit, OnDestroy {
 	}
 	reply(device,path){
 		console.log("reply.action",path);
+		if (device.progress.state!='ended') return;
 		const taskId = device.progress.taskId;
 		let task = JSON.stringify(this.tasks.find(t=>t.id==taskId));
 		task['resume'] = path.id;
