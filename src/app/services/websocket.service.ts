@@ -21,7 +21,7 @@ export class WebSocketService {
     };
     constructor() {
         this.webSocket = new Socket({
-            url: "127.0.0.1:7000",
+            url: "172.20.50.123:7000",
             options: {},
         });
         
@@ -52,7 +52,9 @@ export class WebSocketService {
         this.webSocket.on('tasks',(data)=>{ this.receivedTasks(data); console.log("tasks",data); });       
         this.webSocket.on('actions',(data)=>{ this.receivedActions(data); console.log("actions",data); });        
         this.webSocket.on('devices',(data)=>{ this.connectDevices(data); console.log("devices",data); });        
-        this.webSocket.on('device.connect',(data)=>{ this.connectDevice(data); console.log("device.connect",data); });
+        this.webSocket.on('device.connect',(data)=>{ this.connectDevice(data,true); console.log("device.connect",data); });
+        this.webSocket.on('device.update',(data)=>{ this.connectDevice(data,true); console.log("device.connect",data); });
+        this.webSocket.on('device.network',(data)=>{ console.log("device.network",data); });
         this.webSocket.on('device.capture',(data)=>{ this.screenDevice(data);  });
         this.webSocket.on('task.progress',(data)=>{ this.taskProgress(data);  });
         this.webSocket.on('device.disconnect',(data)=>{ this.disconnectDevice(data); console.log("device.disconnect",data); });
@@ -93,7 +95,7 @@ export class WebSocketService {
 	receivedActions(data){
 		this.events.actions.forEach(fn=>fn(data));
 	}
-    connectDevice(device){
+    connectDevice(device,force){
         console.log("connect device",device);
         console.log("this.devices",this.devices);
         
@@ -114,14 +116,26 @@ export class WebSocketService {
                         path['current'] = false;
                 });
             }
-
-            this.devices.push(device);
+            this.devices.push(device);            
+        }
+        if(force){
+            Object.keys(device).forEach(prop=>{
+                tempDevice[prop] = device[prop];
+            });            
+            
+            this.devices.sort((a,b)=>{
+                if (a.number < b.number) 
+                    return -1;
+                if (a.number > b.number) 
+                    return 1;
+                return 0;
+            });
         }
         this.events.connect.forEach(fn=>fn(device));
     }
     connectDevices(devices){
         console.log("connect devices",devices);
-        devices.forEach(device=>this.connectDevice(device));
+        devices.forEach(device=>this.connectDevice(device,false));
         this.events.devices.forEach(fn=>fn(this.devices));
 		this.devices.sort((a,b)=>{
 			 if (a.number < b.number) 

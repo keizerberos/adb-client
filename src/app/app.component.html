@@ -19,6 +19,7 @@
 				<label class="form-check-label " for="bDatos">Datos</label>
 			</div>
 			<div class="form-check form-switch ">
+				<button (click)="getNetwork()" class="btn btn-sm btn-outline-secondary">Get network</button>
 				<button (click)="installKey()" class="btn btn-sm btn-outline-secondary">Install Apk Keyboard</button>
 				<button (click)="installGni()" class="btn btn-sm btn-outline-secondary">Install Apk Tehering</button>
 				<button (click)="installWifi()" class="btn btn-sm btn-outline-secondary">Install Apk Wifi</button>
@@ -64,6 +65,11 @@
 				<input type="checkbox" class="btn-check" [(ngModel)]="checkedAll" id="chkAll" autocomplete="off">
 				<label (click)="checkAll()" class="btn btn-sm btn-outline-primary" for="chkAll">Todos</label><br>
 			</div>
+		</div>
+		<div *ngIf="selectedDevice!=null">
+			<label>{{selectedDevice.serial}}</label>
+			<input type="text" class="form-control" [(ngModel)]="numberInput" >
+			<button class="btn btn-sm btn-outline-primary" (click)="assignNumber(selectedDevice)" >Asignar Número</button>
 		</div>
 	</div>
 	<div class="col-5">

@@ -19,6 +19,7 @@ export class AppComponent implements OnInit, OnDestroy {
 	width = 600;
 	checkedAll = false;
 	selectedDevice = null;
+	numberInput = "";
 	constructor(
 		private websocketService: WebSocketService,
 		private sanitizer: DomSanitizer) { }
@@ -75,6 +76,15 @@ export class AppComponent implements OnInit, OnDestroy {
 	changeChecked(device){
 		if (this.selectedDevice==null)
 			device.checked=!device.checked;
+	}
+	getNetwork(){
+		let devicesChecked = this.devices.filter(d=>d.checked);
+		devicesChecked.forEach((d,ii)=>{
+			let data = {
+				"devices":d.serial,
+			};
+		this.websocketService.send("device.network", data);
+		});
 	}
 	stopTasks(){
 		
@@ -394,6 +404,15 @@ export class AppComponent implements OnInit, OnDestroy {
 			};
 			this.websocketService.send("tethering.stop", data);
 		});
+	}
+	assignNumber(device){
+		let data = {
+			serial : device.serial,
+			number : this.numberInput,
+		}
+		console.log("sending device.assign",data);
+		this.websocketService.send("device.assign", data);
+
 	}
 	goHome() {
 		this.devices.forEach((d, ii) => {
