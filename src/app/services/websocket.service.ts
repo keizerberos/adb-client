@@ -8,10 +8,13 @@ export class WebSocketService {
     private webSocket: Socket;
 
     devices = [];
+	clusters = [];
     tasks = [];
     events = {
         servers:[],
+		clusters:[],
         connect:[],
+		connectCluster:[],
         devices:[],
         capture:[],
 		actions:[],
@@ -21,16 +24,18 @@ export class WebSocketService {
     };
     constructor() {
         this.webSocket = new Socket({
-            url: "172.20.50.123:7000",
+            url: "127.0.0.1:7000",
             options: {},
         });
         
         this.events = {
             servers:[],
+            clusters:[],
             capture:[],
         	tasks:[],
         	actions:[],
             connect:[],
+			connectCluster:[],
 			progress:[],
             devices:[],
             disconnect:[],
@@ -47,8 +52,8 @@ export class WebSocketService {
         this.initialize();
     }
     initialize() {
-        this.webSocket.on('cluster.connect',(data)=>{ console.log("cluster.connect",data); });     
-        this.webSocket.on('clusters',(data)=>{ console.log("clusters",data); });        
+        this.webSocket.on('cluster.connect',(data)=>{  this.connectCluster(data,true); console.log("cluster.connect",data); });     
+        this.webSocket.on('clusters',(data)=>{ this.connectClusters(data); console.log("clusters",data); });        
         this.webSocket.on('tasks',(data)=>{ this.receivedTasks(data); console.log("tasks",data); });       
         this.webSocket.on('actions',(data)=>{ this.receivedActions(data); console.log("actions",data); });        
         this.webSocket.on('devices',(data)=>{ this.connectDevices(data); console.log("devices",data); });        
@@ -95,6 +100,29 @@ export class WebSocketService {
 	receivedActions(data){
 		this.events.actions.forEach(fn=>fn(data));
 	}
+    connectCluster(cluster,force){
+        console.log("connect cluster",cluster);
+        console.log("this.clusters",this.clusters);
+        
+        const tempCluster = this.clusters.find(s=>s.uuid == cluster.uuid);
+        if (tempCluster == null) {
+			cluster['checked'] = true;
+			cluster['selected'] = 1;
+         
+            this.clusters.push(cluster);            
+        }
+        if(force){
+            Object.keys(cluster).forEach(prop=>{
+                tempCluster[prop] = cluster[prop];
+            });            
+        }
+        this.events.connectCluster.forEach(fn=>fn(cluster));
+    }
+    connectClusters(clusters){
+        console.log("connect clusters",clusters);
+        clusters.forEach(cluster=>this.connectCluster(cluster,false));
+        this.events.clusters.forEach(fn=>fn(this.clusters));		
+    }
     connectDevice(device,force){
         console.log("connect device",device);
         console.log("this.devices",this.devices);

@@ -13,6 +13,7 @@ export class AppComponent implements OnInit, OnDestroy {
 	title = 'ServerXState-app';
 	servers = null;
 	devices = null;
+	clusters = null;
 	tasks = [];
 	actions = [];
 	widthless = 100;
@@ -168,6 +169,7 @@ export class AppComponent implements OnInit, OnDestroy {
 		const self = this;
 		var BLANK_IMG = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 		this.devices = this.websocketService.devices;
+		this.clusters = this.websocketService.clusters;
 		this.websocketService.on("devices", (data) => {
 			/*if (this.devices == null)
 				this.devices = this.websocketService.devices;*/
@@ -209,11 +211,11 @@ export class AppComponent implements OnInit, OnDestroy {
 					img = null;
 					u = null;
 					blob = null;
-					if (self.selectedDevice!=null){
+					/*if (self.selectedDevice!=null){
 						if (self.selectedDevice.serial == device.serial ){
 							self.startRec(device);
 						}
-					}
+					}*/
 				};
 				/*canvas.addEventListener('mousemove', function (event) {
 					console.log("x:" + event.x + " y:" + event.y + " ox:" + event.offsetX + " oy:" + event.offsetY );
@@ -266,6 +268,7 @@ export class AppComponent implements OnInit, OnDestroy {
 	}
 	selectDevice(device){
 		console.log("device",device);
+		/*
 		if (device.selected<2){			
 			this.devices.forEach(d=>{ d.selected = 0});
 			device.selected = 2;
@@ -277,7 +280,10 @@ export class AppComponent implements OnInit, OnDestroy {
 			this.selectedDevice = null;
 			this.devices.forEach(d=>{ d.selected = 1});
 			this.refresh();
-		}		
+		}		*/
+						let cluster = this.clusters.find(c=>c.uuid==device.clusterId);
+				
+        window.open(`http://${cluster.network.address}:8000/#!action=stream&udid=${device.serial}&player=broadway&ws=ws%3A%2F%2F${cluster.network.address}%3A8000%2F%3Faction%3Dproxy-adb%26remote%3Dtcp%253A8886%26udid%3D${device.serial}`, '_blank','toolbar=no,menubar=no,location=no,status=no,directories=no,resizable=yes,scrollbars=yes,width=445,height=885');
 	}
 	startRec(device){
 		let data = {
